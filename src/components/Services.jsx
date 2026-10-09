@@ -210,6 +210,18 @@ export default function Services() {
                     ease: [0.22, 1, 0.36, 1],
                   },
                 }}
+                whileTap={{
+                  y: -6,
+                  scale: 0.97,
+                  rotateX: 5,
+                  rotateY: index % 2 === 0 ? -5 : 5,
+                  transition: {
+                    type: 'spring',
+                    stiffness: 280,
+                    damping: 18,
+                    mass: 0.7,
+                  },
+                }}
                 style={{
                   transformStyle: 'preserve-3d',
                 }}
@@ -235,6 +247,15 @@ export default function Services() {
                     rotate: -8,
                     scale: 1.08,
                     transition: { duration: 0.3 },
+                  }}
+                  whileTap={{
+                    rotate: -12,
+                    scale: 1.12,
+                    transition: {
+                      type: 'spring',
+                      stiffness: 320,
+                      damping: 14,
+                    },
                   }}
                 >
                   <Icon size={30} strokeWidth={1.4} />
@@ -281,6 +302,12 @@ export default function Services() {
                       x: 5,
                       y: -5,
                       rotate: 45,
+                    }}
+                    whileTap={{
+                      x: 3,
+                      y: -3,
+                      rotate: 35,
+                      scale: 1.08,
                     }}
                   >
                     <ArrowUpRight
