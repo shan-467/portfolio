@@ -574,6 +574,20 @@
     border-radius: 1.2rem;
   }
 
+  .contact-form input,
+  .contact-form textarea,
+  .contact-form select {
+    font-size: 16px;
+  }
+
+  .contact-link-content {
+    min-width: 0;
+  }
+
+  .contact-link-content strong {
+    overflow-wrap: anywhere;
+  }
+
   .form-bottom {
     align-items: flex-start;
     flex-direction: column;
