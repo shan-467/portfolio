@@ -82,22 +82,31 @@ const centerVariants = {
 const nodeVariants = {
   hidden: {
     opacity: 0,
-    scale: 0.75,
-    y: 25,
+    scale: 0.94,
+    y: 42,
+    rotateX: 8,
   },
 
-  visible: {
+  visible: (index) => ({
     opacity: 1,
     scale: 1,
     y: 0,
+    rotateX: 0,
     transition: {
-      duration: 0.7,
-      ease: [0.22, 1, 0.36, 1],
+      type: 'spring',
+      stiffness: 115,
+      damping: 18,
+      mass: 0.8,
+      delay: index * 0.06,
+      opacity: {
+        duration: 0.35,
+        delay: index * 0.06,
+      },
     },
-  },
+  }),
 };
 
-function MapNode({ item }) {
+function MapNode({ item, index }) {
   const Icon = item.icon;
   const movement = {
     '01': [0.75, 1.1],
@@ -111,12 +120,27 @@ function MapNode({ item }) {
   return (
     <motion.div
       className={`map-node ${item.position}`}
+      custom={index}
       variants={nodeVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{
+        once: true,
+        amount: 0.18,
+      }}
       whileHover={{
         y: -7,
         scale: 1.025,
         transition: {
           duration: 0.3,
+        },
+      }}
+      whileTap={{
+        scale: 0.98,
+        transition: {
+          type: 'spring',
+          stiffness: 300,
+          damping: 20,
         },
       }}
     >
@@ -237,12 +261,6 @@ export default function Highlights() {
           className="creative-map"
           onMouseMove={handleMapMouseMove}
           onMouseLeave={handleMapMouseLeave}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{
-            once: true,
-            amount: 0.12,
-          }}
         >
 
           {/* GRID */}
@@ -384,6 +402,12 @@ export default function Highlights() {
           <motion.div
             className="map-center"
             variants={centerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{
+              once: true,
+              amount: 0.3,
+            }}
           >
 
             <div className="center-ring ring-one" />
@@ -421,10 +445,11 @@ export default function Highlights() {
               NODES
           ================================= */}
 
-          {mapItems.map((item) => (
+          {mapItems.map((item, index) => (
             <MapNode
               key={item.id}
               item={item}
+              index={index}
             />
           ))}
 
