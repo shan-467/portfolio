@@ -164,6 +164,7 @@
   min-height: 555px;
 
   padding: 30px;
+  cursor: pointer;
 
   display: flex;
   flex-direction: column;
@@ -193,6 +194,11 @@
     background 0.45s ease;
 }
 
+.service-3d-card:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 5px;
+}
+
 .service-3d-card:hover {
   border-color: rgba(17, 17, 17, 0.22);
 
@@ -202,34 +208,38 @@
     0 15px 30px rgba(0, 0, 0, 0.05);
 }
 
+.service-3d-card--active {
+  border-color: rgba(17, 17, 17, 0.3);
+
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 40px 75px rgba(0, 0, 0, 0.12),
+    0 14px 28px rgba(0, 0, 0, 0.07);
+}
+
+.service-3d-card--active .card-glow {
+  transform: scale(1.5) translate(-16px, 16px);
+  opacity: 1;
+}
+
+.service-3d-card--active .service-icon,
+.service-3d-card--active .card-arrow {
+  background: #111;
+  color: #fff;
+}
+
+.service-3d-card--active .service-icon {
+  transform: translateZ(35px) rotate(-8deg) scale(1.08);
+}
+
+.service-3d-card--active .card-edge {
+  transform: scaleX(1);
+}
+
 @media (hover: none), (pointer: coarse) {
   .service-3d-card {
     -webkit-tap-highlight-color: transparent;
     touch-action: pan-y;
-  }
-
-  .service-3d-card:active {
-    border-color: rgba(17, 17, 17, 0.3);
-
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.9) inset,
-      0 30px 55px rgba(0, 0, 0, 0.13),
-      0 12px 24px rgba(0, 0, 0, 0.08);
-  }
-
-  .service-3d-card:active .card-glow {
-    transform: scale(1.5) translate(-16px, 16px);
-    opacity: 1;
-  }
-
-  .service-3d-card:active .service-icon,
-  .service-3d-card:active .card-arrow {
-    background: #111;
-    color: #fff;
-  }
-
-  .service-3d-card:active .card-edge {
-    transform: scaleX(1);
   }
 }
 
@@ -333,7 +343,8 @@
 
   transition:
     background 0.35s ease,
-    box-shadow 0.35s ease;
+    box-shadow 0.35s ease,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .service-3d-card:hover .service-icon {
@@ -474,7 +485,12 @@
 
   transition:
     background 0.35s ease,
-    color 0.35s ease;
+    color 0.35s ease,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.service-3d-card--active .card-arrow {
+  transform: translateZ(25px) rotate(45deg) scale(1.08);
 }
 
 .service-3d-card:hover .card-arrow {

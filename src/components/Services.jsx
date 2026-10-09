@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import {
   ArrowUpRight,
   Globe2,
@@ -109,33 +110,48 @@ const services = [
   },
 ];
 
-const containerVariants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.12,
-    },
-  },
-};
-
 const cardVariants = {
   hidden: {
     opacity: 0,
-    y: 80,
-    rotateX: 8,
+    y: 72,
+    scale: 0.94,
+    rotateX: 12,
   },
-  show: {
+  show: (index) => ({
     opacity: 1,
     y: 0,
+    scale: 1,
     rotateX: 0,
     transition: {
-      duration: 0.9,
-      ease: [0.22, 1, 0.36, 1],
+      type: 'spring',
+      stiffness: 95,
+      damping: 19,
+      mass: 0.85,
+      delay: index * 0.08,
+      opacity: {
+        duration: 0.35,
+        delay: index * 0.08,
+      },
     },
-  },
+  }),
+  active: (index) => ({
+    opacity: 1,
+    y: -8,
+    scale: 1.025,
+    rotateX: 4,
+    rotateY: index % 2 === 0 ? -4 : 4,
+    transition: {
+      type: 'spring',
+      stiffness: 260,
+      damping: 18,
+      mass: 0.75,
+    },
+  }),
 };
 
 export default function Services() {
+  const [activeServiceId, setActiveServiceId] = useState(null);
+
   return (
     <section className="services-3d" id="services">
       <div className="services-orb orb-one" />
@@ -186,21 +202,35 @@ export default function Services() {
         {/* CARDS */}
         <motion.div
           className="services-grid-3d"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.08 }}
         >
           {services.map((service, index) => {
             const Icon = service.icon;
+            const isActive = activeServiceId === service.id;
 
             return (
               <motion.article
                 key={service.id}
                 className={`service-3d-card ${
                   index === 0 ? 'featured-card' : ''
-                }`}
+                }${isActive ? ' service-3d-card--active' : ''}`}
+                custom={index}
                 variants={cardVariants}
+                initial="hidden"
+                whileInView={isActive ? 'active' : 'show'}
+                viewport={{ once: true, amount: 0.2 }}
+                role="button"
+                tabIndex={0}
+                aria-pressed={isActive}
+                aria-label={`${service.title} service card`}
+                onClick={() => {
+                  setActiveServiceId(isActive ? null : service.id);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    setActiveServiceId(isActive ? null : service.id);
+                  }
+                }}
                 whileHover={{
                   y: -14,
                   rotateX: 3,
@@ -208,18 +238,6 @@ export default function Services() {
                   transition: {
                     duration: 0.45,
                     ease: [0.22, 1, 0.36, 1],
-                  },
-                }}
-                whileTap={{
-                  y: -6,
-                  scale: 0.97,
-                  rotateX: 5,
-                  rotateY: index % 2 === 0 ? -5 : 5,
-                  transition: {
-                    type: 'spring',
-                    stiffness: 280,
-                    damping: 18,
-                    mass: 0.7,
                   },
                 }}
                 style={{
@@ -247,15 +265,6 @@ export default function Services() {
                     rotate: -8,
                     scale: 1.08,
                     transition: { duration: 0.3 },
-                  }}
-                  whileTap={{
-                    rotate: -12,
-                    scale: 1.12,
-                    transition: {
-                      type: 'spring',
-                      stiffness: 320,
-                      damping: 14,
-                    },
                   }}
                 >
                   <Icon size={30} strokeWidth={1.4} />
@@ -302,12 +311,6 @@ export default function Services() {
                       x: 5,
                       y: -5,
                       rotate: 45,
-                    }}
-                    whileTap={{
-                      x: 3,
-                      y: -3,
-                      rotate: 35,
-                      scale: 1.08,
                     }}
                   >
                     <ArrowUpRight
