@@ -576,6 +576,11 @@
   cursor: pointer;
 }
 
+.hero-image-wrap:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 6px;
+}
+
 /* =========================================================
    IMAGE FRAME
 ========================================================= */
@@ -723,6 +728,37 @@
       transparent 35%,
       rgba(0, 0, 0, 0.22)
     );
+}
+
+.hero-image-toggle-hint {
+    position: absolute;
+
+    left: 16px;
+    bottom: 16px;
+
+    z-index: 13;
+
+    display: none;
+
+    padding: 8px 10px;
+
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+
+    background: rgba(17, 17, 17, 0.48);
+    color: #fff;
+
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    pointer-events: none;
+}
+
+@media (hover: none), (pointer: coarse) {
+    .hero-image-toggle-hint {
+      display: block;
+    }
 }
 
 /* =========================================================

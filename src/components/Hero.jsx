@@ -28,6 +28,13 @@ export default function Hero({ profile }) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [imageHovered, setImageHovered] = useState(false);
+  const [imagePinned, setImagePinned] = useState(false);
+  const showAlternateImage = imageHovered || imagePinned;
+
+  const toggleHeroImage = () => {
+    setImageHovered(false);
+    setImagePinned((pinned) => !pinned);
+  };
 
   /* =====================================================
      ROLES
@@ -594,7 +601,7 @@ export default function Hero({ profile }) {
             className={`
               hero-image-wrap
               ${
-                imageHovered
+                showAlternateImage
                   ? 'hero-image-wrap--hover'
                   : ''
               }
@@ -603,12 +610,27 @@ export default function Hero({ profile }) {
               x: imageX,
               y: imageY,
             }}
-            onMouseEnter={() =>
-              setImageHovered(true)
-            }
-            onMouseLeave={() =>
-              setImageHovered(false)
-            }
+            role="button"
+            tabIndex={0}
+            aria-label="Flip portrait image"
+            aria-pressed={showAlternateImage}
+            onPointerEnter={(event) => {
+              if (event.pointerType === 'mouse') {
+                setImageHovered(true);
+              }
+            }}
+            onPointerLeave={(event) => {
+              if (event.pointerType === 'mouse') {
+                setImageHovered(false);
+              }
+            }}
+            onClick={toggleHeroImage}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                toggleHeroImage();
+              }
+            }}
           >
 
             <div className="hero-image-frame">
@@ -627,17 +649,17 @@ export default function Hero({ profile }) {
                 alt="MUHAMMED SHEHOOD"
                 animate={{
                   opacity:
-                    imageHovered
+                    showAlternateImage
                       ? 0
                       : 1,
 
                   scale:
-                    imageHovered
+                    showAlternateImage
                       ? 0.97
                       : 1,
 
                   filter:
-                    imageHovered
+                    showAlternateImage
                       ? 'blur(5px)'
                       : 'blur(0px)',
                 }}
@@ -671,17 +693,17 @@ export default function Hero({ profile }) {
                 }}
                 animate={{
                   opacity:
-                    imageHovered
+                    showAlternateImage
                       ? 1
                       : 0,
 
                   scale:
-                    imageHovered
+                    showAlternateImage
                       ? 1
                       : 1.08,
 
                   filter:
-                    imageHovered
+                    showAlternateImage
                       ? 'blur(0px)'
                       : 'blur(12px)',
                 }}
@@ -704,12 +726,12 @@ export default function Hero({ profile }) {
                 className="hero-image-reveal"
                 animate={{
                   opacity:
-                    imageHovered
+                    showAlternateImage
                       ? [0, 0.8, 0]
                       : 0,
 
                   scale:
-                    imageHovered
+                    showAlternateImage
                       ? [0.7, 1.15, 1]
                       : 0.7,
                 }}
@@ -732,12 +754,12 @@ export default function Hero({ profile }) {
                 className="hero-image-light"
                 animate={{
                   x:
-                    imageHovered
+                    showAlternateImage
                       ? ['-120%', '120%']
                       : '-120%',
 
                   opacity:
-                    imageHovered
+                    showAlternateImage
                       ? [0, 0.35, 0]
                       : 0,
                 }}
@@ -757,6 +779,9 @@ export default function Hero({ profile }) {
               ================================================= */}
 
               <div className="hero-image-overlay" />
+              <span className="hero-image-toggle-hint" aria-hidden="true">
+                Tap to flip
+              </span>
 
               {/* =================================================
                   NUMBER
@@ -766,7 +791,7 @@ export default function Hero({ profile }) {
                 className="hero-image-number"
                 animate={{
                   opacity:
-                    imageHovered
+                    showAlternateImage
                       ? 0.45
                       : 1,
                 }}
@@ -785,12 +810,12 @@ export default function Hero({ profile }) {
                 className="hero-image-label"
                 animate={{
                   opacity:
-                    imageHovered
+                    showAlternateImage
                       ? 0.65
                       : 1,
 
                   y:
-                    imageHovered
+                    showAlternateImage
                       ? 4
                       : 0,
                 }}
