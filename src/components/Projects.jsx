@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
@@ -108,33 +108,58 @@ const projects = [
 ];
 
 const pageVariants = {
-  enter: (direction) => ({
-    rotateY: direction > 0 ? 100 : -100,
+  enter: ({ direction, isMobile }) => ({
+    rotateY: isMobile ? 0 : direction > 0 ? 100 : -100,
     opacity: 0,
-    x: direction > 0 ? 100 : -100,
-    transformOrigin: direction > 0 ? 'left center' : 'right center',
+    x: direction > 0 ? (isMobile ? 36 : 100) : (isMobile ? -36 : -100),
+    scale: isMobile ? 0.98 : 1,
+    pointerEvents: 'none',
+    transformOrigin: isMobile
+      ? 'center center'
+      : direction > 0
+        ? 'left center'
+        : 'right center',
   }),
 
   center: {
     rotateY: 0,
     opacity: 1,
     x: 0,
+    scale: 1,
+    pointerEvents: 'auto',
     transformOrigin: 'center center',
   },
 
-  exit: (direction) => ({
-    rotateY: direction > 0 ? -100 : 100,
+  exit: ({ direction, isMobile }) => ({
+    rotateY: isMobile ? 0 : direction > 0 ? -100 : 100,
     opacity: 0,
-    x: direction > 0 ? -100 : 100,
-    transformOrigin: direction > 0 ? 'right center' : 'left center',
+    x: direction > 0 ? (isMobile ? -36 : -100) : (isMobile ? 36 : 100),
+    scale: isMobile ? 0.98 : 1,
+    pointerEvents: 'none',
+    transformOrigin: isMobile
+      ? 'center center'
+      : direction > 0
+        ? 'right center'
+        : 'left center',
   }),
 };
 
 export default function Projects() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [isMobile, setIsMobile] = useState(false);
 
   const project = projects[current];
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 760px)');
+    const updateViewport = () => setIsMobile(mediaQuery.matches);
+
+    updateViewport();
+    mediaQuery.addEventListener('change', updateViewport);
+
+    return () => mediaQuery.removeEventListener('change', updateViewport);
+  }, []);
 
   const nextProject = () => {
     setDirection(1);
@@ -306,7 +331,7 @@ export default function Projects() {
 
             <AnimatePresence
               initial={false}
-              custom={direction}
+              custom={{ direction, isMobile }}
               mode="sync"
             >
 
@@ -314,7 +339,7 @@ export default function Projects() {
                 key={project.id}
                 className="book-turn-page"
 
-                custom={direction}
+                custom={{ direction, isMobile }}
 
                 variants={pageVariants}
 
@@ -325,7 +350,7 @@ export default function Projects() {
                 exit="exit"
 
                 transition={{
-                  duration: 0.8,
+                  duration: isMobile ? 0.48 : 0.8,
                   ease: [0.22, 1, 0.36, 1],
                 }}
               >

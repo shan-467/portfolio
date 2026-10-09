@@ -1043,6 +1043,9 @@
 ======================================== */
 
 .book-controls {
+  position: relative;
+  z-index: 5;
+
   display: flex;
 
   align-items: center;
@@ -1170,6 +1173,9 @@
 ======================================== */
 
 .book-projects-nav {
+  position: relative;
+  z-index: 5;
+
   display: flex;
 
   align-items: center;
@@ -1377,6 +1383,8 @@
   */
 
   .book-stage {
+    z-index: 1;
+
     display: block;
 
     min-height: auto;
@@ -1428,9 +1436,13 @@
 
 
   .book-page-wrapper {
+    z-index: 1;
+
     min-height: 650px;
 
     margin-top: 1px;
+
+    overflow: hidden;
   }
 
 
@@ -1440,6 +1452,10 @@
     grid-template-columns: 1fr;
 
     min-height: 650px;
+
+    transform-origin: center center;
+
+    will-change: transform, opacity;
   }
 
 
