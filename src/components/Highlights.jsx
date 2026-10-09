@@ -66,14 +66,16 @@ const mapItems = [
 const centerVariants = {
   hidden: {
     opacity: 0,
-    scale: 0.65,
+    scale: 0.88,
+    y: 18,
   },
 
   visible: {
     opacity: 1,
     scale: 1,
+    y: 0,
     transition: {
-      duration: 0.9,
+      duration: 0.85,
       ease: [0.22, 1, 0.36, 1],
     },
   },
@@ -82,25 +84,21 @@ const centerVariants = {
 const nodeVariants = {
   hidden: {
     opacity: 0,
-    scale: 0.94,
-    y: 42,
-    rotateX: 8,
+    scale: 0.97,
+    y: 32,
   },
 
   visible: (index) => ({
     opacity: 1,
     scale: 1,
     y: 0,
-    rotateX: 0,
     transition: {
-      type: 'spring',
-      stiffness: 115,
-      damping: 18,
-      mass: 0.8,
-      delay: index * 0.06,
+      duration: 0.72,
+      ease: [0.22, 1, 0.36, 1],
+      delay: index * 0.09,
       opacity: {
-        duration: 0.35,
-        delay: index * 0.06,
+        duration: 0.42,
+        delay: index * 0.09,
       },
     },
   }),
