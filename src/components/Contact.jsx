@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowUpRight,
@@ -24,32 +25,47 @@ const fadeUp = {
 };
 
 export default function Contact() {
-  const handleSubmit = (event) => {
+  const [submissionStatus, setSubmissionStatus] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-    const name = formData.get('name').toString().trim();
-    const email = formData.get('email').toString().trim();
-    const project = formData.get('project').toString();
-    const message = formData.get('message').toString().trim();
-    const subject = `Project inquiry from ${name}`;
-    const body = [
-      `Name: ${name}`,
-      `Email: ${email}`,
-      `Project type: ${project || 'Not specified'}`,
-      '',
-      message,
-    ].join('\n');
-    const composeParams = new URLSearchParams({
-      view: 'cm',
-      fs: '1',
-      to: contactEmail,
-      su: subject,
-      body,
-    });
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
+    payload._subject = `Project inquiry from ${formData.get('name').toString().trim()}`;
+    payload._template = 'table';
 
-    window.location.href =
-      `https://mail.google.com/mail/?${composeParams.toString()}`;
+    setIsSubmitting(true);
+    setSubmissionStatus('');
+
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${contactEmail}`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+
+      if (!response.ok || (result.success !== true && result.success !== 'true')) {
+        throw new Error(result.message || 'The email service could not send your message.');
+      }
+
+      form.reset();
+      setSubmissionStatus('Message sent successfully. Thank you for reaching out!');
+    } catch (error) {
+      setSubmissionStatus(
+        error instanceof Error
+          ? `Unable to send your message: ${error.message} Please email ${contactEmail} directly.`
+          : 'Unable to send your message. Please try again.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -218,12 +234,26 @@ export default function Contact() {
 
             <div className="form-bottom">
 
-              <span className="form-note">
-                Usually replies within 24–48h.
-              </span>
+              <div className="form-feedback">
+                <span className="form-note">
+                  Usually replies within 24–48h.
+                </span>
 
-              <button type="submit">
-                <span>Send message</span>
+                <span
+                  className={`form-status ${
+                    submissionStatus.startsWith('Unable')
+                      ? 'form-status--error'
+                      : ''
+                  }`}
+                  role="status"
+                  aria-live="polite"
+                >
+                  {isSubmitting ? 'Sending your message…' : submissionStatus}
+                </span>
+              </div>
+
+              <button type="submit" disabled={isSubmitting}>
+                <span>{isSubmitting ? 'Sending…' : 'Send message'}</span>
 
                 <span className="send-icon">
                   <Send size={17} strokeWidth={1.8} />

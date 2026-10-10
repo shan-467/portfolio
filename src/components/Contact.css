@@ -426,6 +426,22 @@
   color: rgba(17, 17, 17, 0.4);
 }
 
+.form-feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.form-status {
+  color: #356b46;
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.form-status--error {
+  color: #a52c2c;
+}
+
 /* =========================
    BUTTON
 ========================= */
@@ -503,6 +519,11 @@
 
 .form-bottom button:hover .send-icon {
   transform: rotate(45deg);
+}
+
+.form-bottom button:disabled {
+  cursor: wait;
+  opacity: 0.7;
 }
 
 /* =========================
