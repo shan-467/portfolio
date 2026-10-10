@@ -9,6 +9,8 @@ import {
 
 import './Contact.css';
 
+const contactEmail = 'shansha2423@gmail.com';
+
 const fadeUp = {
   hidden: { opacity: 0, y: 35 },
   visible: {
@@ -22,6 +24,34 @@ const fadeUp = {
 };
 
 export default function Contact() {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const name = formData.get('name').toString().trim();
+    const email = formData.get('email').toString().trim();
+    const project = formData.get('project').toString();
+    const message = formData.get('message').toString().trim();
+    const subject = `Project inquiry from ${name}`;
+    const body = [
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Project type: ${project || 'Not specified'}`,
+      '',
+      message,
+    ].join('\n');
+    const composeParams = new URLSearchParams({
+      view: 'cm',
+      fs: '1',
+      to: contactEmail,
+      su: subject,
+      body,
+    });
+
+    window.location.href =
+      `https://mail.google.com/mail/?${composeParams.toString()}`;
+  };
+
   return (
     <section className="contact-section" id="contact">
       <div className="contact-wrap">
@@ -74,7 +104,7 @@ export default function Contact() {
             <div className="contact-links">
 
               <a
-                href="mailto:shansha2423@gmail.com"
+                href={`mailto:${contactEmail}`}
                 className="contact-link"
               >
                 <span className="contact-link-icon">
@@ -131,7 +161,7 @@ export default function Contact() {
               delay: 0.1,
               ease: [0.22, 1, 0.36, 1],
             }}
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={handleSubmit}
           >
             <div className="form-top">
               <span>02</span>
@@ -146,6 +176,7 @@ export default function Contact() {
                   type="text"
                   name="name"
                   placeholder="John Doe"
+                  required
                 />
               </label>
 
@@ -155,6 +186,7 @@ export default function Contact() {
                   type="email"
                   name="email"
                   placeholder="john@example.com"
+                  required
                 />
               </label>
 
@@ -180,6 +212,7 @@ export default function Contact() {
                 name="message"
                 rows="6"
                 placeholder="Tell me what you're building, what you need, and what you're aiming for..."
+                required
               />
             </label>
 
